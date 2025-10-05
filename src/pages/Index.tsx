@@ -1,5 +1,6 @@
 import { Hero } from "@/components/Hero";
 import { AsteroidTracker } from "@/components/AsteroidTracker";
+import { OrbitalVisualization } from "@/components/OrbitalVisualization";
 import { ImpactSimulator } from "@/components/ImpactSimulator";
 import { EducationalContent } from "@/components/EducationalContent";
 
@@ -8,6 +9,7 @@ const Index = () => {
     <main className="min-h-screen">
       <Hero />
       <AsteroidTracker />
+      <OrbitalVisualization />
       <ImpactSimulator />
       <EducationalContent />
       

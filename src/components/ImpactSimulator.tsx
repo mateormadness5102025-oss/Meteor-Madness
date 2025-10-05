@@ -21,12 +21,36 @@ export const ImpactSimulator = () => {
     });
   };
 
-  // Simple impact energy calculation (kinetic energy formula)
+  // Enhanced impact energy calculation with USGS seismic correlation
   const calculateEnergy = () => {
-    const mass = (4/3) * Math.PI * Math.pow(diameter[0]/2, 3) * 2700; // Assuming rock density
+    const mass = (4/3) * Math.PI * Math.pow(diameter[0]/2, 3) * 2700; // Rock density kg/m³
     const velocityMs = velocity[0] * 1000; // Convert km/s to m/s
     const energy = 0.5 * mass * Math.pow(velocityMs, 2);
     return (energy / 4.184e15).toFixed(2); // Convert to megatons TNT equivalent
+  };
+
+  // Calculate equivalent seismic magnitude using USGS correlation
+  const calculateSeismicMagnitude = () => {
+    const energyJoules = parseFloat(calculateEnergy()) * 4.184e15;
+    // USGS formula: M = (2/3) * log10(E) - 2.9 (where E is in ergs)
+    const energyErgs = energyJoules * 1e7;
+    const magnitude = (2/3) * Math.log10(energyErgs) - 2.9;
+    return magnitude.toFixed(1);
+  };
+
+  // Calculate atmospheric blast radius (km)
+  const calculateBlastRadius = () => {
+    const energy = parseFloat(calculateEnergy());
+    // Empirical formula from impact studies
+    const blastRadius = 2.2 * Math.pow(energy, 0.33);
+    return blastRadius.toFixed(1);
+  };
+
+  // Calculate thermal radiation radius (km)
+  const calculateThermalRadius = () => {
+    const energy = parseFloat(calculateEnergy());
+    const thermalRadius = 3.5 * Math.pow(energy, 0.41);
+    return thermalRadius.toFixed(1);
   };
 
   const getThreatLevel = () => {
@@ -145,12 +169,20 @@ export const ImpactSimulator = () => {
                     <span className="data-text font-bold text-primary">{calculateEnergy()} MT</span>
                   </div>
                   <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/50">
+                    <span className="text-muted-foreground">Seismic Magnitude</span>
+                    <span className="data-text font-bold text-warning">{calculateSeismicMagnitude()} Mw</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/50">
                     <span className="text-muted-foreground">Crater Diameter</span>
                     <span className="data-text font-bold text-primary">~{(diameter[0] * 20).toFixed(0)}m</span>
                   </div>
                   <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/50">
-                    <span className="text-muted-foreground">Affected Radius</span>
-                    <span className="data-text font-bold text-primary">~{(diameter[0] * 50 / 1000).toFixed(1)} km</span>
+                    <span className="text-muted-foreground">Blast Radius</span>
+                    <span className="data-text font-bold text-destructive">{calculateBlastRadius()} km</span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-secondary/50">
+                    <span className="text-muted-foreground">Thermal Radiation</span>
+                    <span className="data-text font-bold text-accent">{calculateThermalRadius()} km</span>
                   </div>
                 </div>
               </div>

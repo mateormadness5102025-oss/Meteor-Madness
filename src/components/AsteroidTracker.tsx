@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface NearEarthObject {
   id: string;
   name: string;
+  absolute_magnitude_h: number;
   estimated_diameter: {
     meters: {
       estimated_diameter_min: number;
@@ -17,6 +18,7 @@ interface NearEarthObject {
     close_approach_date: string;
     relative_velocity: {
       kilometers_per_hour: string;
+      kilometers_per_second: string;
     };
     miss_distance: {
       kilometers: string;
@@ -138,7 +140,7 @@ export const AsteroidTracker = () => {
                             </Badge>
                           )}
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
                           <div>
                             <p className="text-muted-foreground">Diameter</p>
                             <p className="data-text font-semibold">{avgDiameter.toFixed(0)}m</p>
@@ -146,14 +148,18 @@ export const AsteroidTracker = () => {
                           <div>
                             <p className="text-muted-foreground">Velocity</p>
                             <p className="data-text font-semibold">
-                              {parseFloat(approach.relative_velocity.kilometers_per_hour).toFixed(0)} km/h
+                              {parseFloat(approach.relative_velocity.kilometers_per_second).toFixed(1)} km/s
                             </p>
                           </div>
                           <div>
                             <p className="text-muted-foreground">Miss Distance</p>
                             <p className="data-text font-semibold">
-                              {parseFloat(approach.miss_distance.kilometers).toFixed(0)} km
+                              {(parseFloat(approach.miss_distance.kilometers) / 384400).toFixed(2)} LD
                             </p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Magnitude</p>
+                            <p className="data-text font-semibold">{asteroid.absolute_magnitude_h.toFixed(1)} H</p>
                           </div>
                           <div>
                             <p className="text-muted-foreground">Approach Date</p>
